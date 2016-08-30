@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import testleak.util.JaxbUtil;
 
 @Service
 public class MessageHandlerServiceImpl implements MessageHandlerService {
@@ -30,7 +31,7 @@ public class MessageHandlerServiceImpl implements MessageHandlerService {
             e.printStackTrace();
         }
 
-        return new MessageAcknowledgement(message.getId(), message.getPayload(), this.replyMessage);
+        return new MessageAcknowledgement(message.getId(), JaxbUtil.marshalJaxbObj(message), this.replyMessage);
     }
 
 }
