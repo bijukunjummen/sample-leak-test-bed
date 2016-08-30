@@ -9,21 +9,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import testleak.domain.Message;
 import testleak.domain.MessageAcknowledgement;
-import testleak.service.NativeMemoryLeakService;
+import testleak.service.HeapMemoryService;
 
 @RestController
-public class NativeMemoryLeakController {
+public class HeapMemoryLeakController {
 
-    private final NativeMemoryLeakService nativeMemoryLeakService;
+    private final HeapMemoryService heapMemoryService;
 
     @Autowired
-    public NativeMemoryLeakController(NativeMemoryLeakService nativeMemoryLeakService) {
-        this.nativeMemoryLeakService = nativeMemoryLeakService;
+    public HeapMemoryLeakController(HeapMemoryService heapMemoryService) {
+        this.heapMemoryService = heapMemoryService;
     }
 
-    @RequestMapping(value = "/native", method = RequestMethod.POST)
+    @RequestMapping(value = "/heap", method = RequestMethod.POST)
     public Resource<MessageAcknowledgement> pongMessage(@RequestBody Message input) {
-        return new Resource<>(nativeMemoryLeakService.handleMessage(input));
+        return new Resource<>(heapMemoryService.addToListAndReturn(input));
     }
 
 }
