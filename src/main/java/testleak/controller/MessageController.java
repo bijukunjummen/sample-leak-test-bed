@@ -1,9 +1,9 @@
-package org.bk.producer.controller;
+package testleak.controller;
 
 
-import org.bk.producer.domain.Message;
-import org.bk.producer.domain.MessageAcknowledgement;
-import org.bk.producer.service.MessageHandlerService;
+import testleak.domain.Message;
+import testleak.domain.MessageAcknowledgement;
+import testleak.service.MessageHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +23,7 @@ public class MessageController {
 
     @RequestMapping(value = "/message", method = RequestMethod.POST)
     public Resource<MessageAcknowledgement> pongMessage(@RequestBody Message input) {
-        return new Resource<>(this.messageHandlerService.handleMessage(input).block(20000L));
+        return new Resource<>(this.messageHandlerService.handleMessage(input));
     }
 
 }

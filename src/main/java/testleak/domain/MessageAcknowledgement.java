@@ -1,4 +1,4 @@
-package org.bk.producer.domain;
+package testleak.domain;
 
 
 import java.util.Objects;
