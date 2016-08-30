@@ -1,29 +1,29 @@
 package testleak.controller;
 
 
-import testleak.domain.Message;
-import testleak.domain.MessageAcknowledgement;
-import testleak.service.MessageHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import testleak.domain.Message;
+import testleak.domain.MessageAcknowledgement;
+import testleak.service.NativeMemoryLeakService;
 
 @RestController
-public class MessageController {
+public class NativeMemoryLeakController {
 
-    private final MessageHandlerService messageHandlerService;
+    private final NativeMemoryLeakService nativeMemoryLeakService;
 
     @Autowired
-    public MessageController(MessageHandlerService messageHandlerService) {
-        this.messageHandlerService = messageHandlerService;
+    public NativeMemoryLeakController(NativeMemoryLeakService nativeMemoryLeakService) {
+        this.nativeMemoryLeakService = nativeMemoryLeakService;
     }
 
     @RequestMapping(value = "/message", method = RequestMethod.POST)
     public Resource<MessageAcknowledgement> pongMessage(@RequestBody Message input) {
-        return new Resource<>(this.messageHandlerService.handleMessage(input));
+        return new Resource<>(nativeMemoryLeakService.handleMessage(input));
     }
 
 }
