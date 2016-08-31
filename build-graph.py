@@ -11,7 +11,7 @@ import sys
 import re
 import matplotlib.pyplot as plt
 from dateutil.parser import parse
-
+from collections import OrderedDict
 
 def read_data(filename, pid, region_names):
     """Read `cf logs` output when dump.sh is running"""
@@ -76,8 +76,6 @@ def read_data(filename, pid, region_names):
                 m = memory_region_patterns[index].search(line.strip())
                 if m:
                     region_totals.setdefault(region_name, []).append(m.groups())
-                else:
-                    print 'line [%s]' % line.strip()
     max_len = len(x_series)
     for key in region_totals:
         region_totals[key] = region_totals[key][0:max_len]
@@ -116,7 +114,9 @@ def plot_jvm_graph(x_series, y_series, crashes, title, filename):
     All of the plots need to have the same length.  Each data set is on its
     own graph, graphs are top down for easy comparison.
     """
-    plt.rcParams["figure.figsize"] = [15, 12]
+
+    figsize = 3 * len(y_series)
+    plt.rcParams["figure.figsize"] = [figsize, figsize]
     plt.title("Java Memory Usage Over Time")
     plt.xlabel("Iteration")
 
@@ -179,17 +179,17 @@ if __name__ == '__main__':
         ),
         crashes)
 
-    memory_regions = {}
-    for region_name in region_totals:
-        for item in region_totals[region_name]:
-            memory_regions.setdefault(region_name + "\nreserved", []).append(fix_jvm(item[0]))
-            memory_regions.setdefault(region_name + "\ncommitted", []).append(fix_jvm(item[2]))
-
+    memory_regions = OrderedDict()
     memory_regions.update({
         "reserved": [fix_jvm(item[0]) for item in jvm_totals],
         "committed": [fix_jvm(item[2]) for item in jvm_totals],
         "top RES": [fix_top(item[1]) for item in top_totals]
     })
+    for region_name in region_totals:
+        for item in region_totals[region_name]:
+            memory_regions.setdefault(region_name + "\nreserved", []).append(fix_jvm(item[0]))
+            memory_regions.setdefault(region_name + "\ncommitted", []).append(fix_jvm(item[2]))
+
     # graph the Java NMT totals w/top RES output
     plot_jvm_graph(x_series,
                    memory_regions,
@@ -197,17 +197,17 @@ if __name__ == '__main__':
                    "Total JVM Memory Usage Over Time",
                    'mem-graph-jvm-total-res.png')
 
-    memory_regions = {}
-    for region_name in region_totals:
-        for item in region_totals[region_name]:
-            memory_regions.setdefault(region_name + "\nreserved", []).append(fix_jvm(item[1]))
-            memory_regions.setdefault(region_name + "\ncommitted", []).append(fix_jvm(item[3]))
-
+    memory_regions = OrderedDict()
     memory_regions.update({
         "reserved": [fix_jvm(item[1]) for item in jvm_totals],
         "committed": [fix_jvm(item[3]) for item in jvm_totals],
         "top RES": [fix_top(item[1]) for item in top_totals]
     })
+    for region_name in region_totals:
+        for item in region_totals[region_name]:
+            memory_regions.setdefault(region_name + "\nreserved", []).append(fix_jvm(item[1]))
+            memory_regions.setdefault(region_name + "\ncommitted", []).append(fix_jvm(item[3]))
+
     # graph the Java NMT diffs w/top RES output
     plot_jvm_graph(x_series,
                    memory_regions,
