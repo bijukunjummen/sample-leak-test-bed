@@ -22,7 +22,15 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'spring-boot'
 
-jar { baseName = 'sample-leak-test-bed' }
+jar {
+    baseName = 'sample-leak-test-bed'
+    from ('src/main/resources/.profile.d') {
+        into ("../../.profile.d")
+    }
+    from ('src/main/resources/dump.sh') {
+        into ('../../')
+    }
+}
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
