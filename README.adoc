@@ -1,6 +1,6 @@
 == Code with Known Memory Leaks
 
 1. Native memory Leak
-The JaxbUtil class used here has a [known](http://stackoverflow.com/questions/3584821/jaxbcontext-newinstance-memory-leak) native memory leak
+The JaxbUtil class used here has a http://stackoverflow.com/questions/3584821/jaxbcontext-newinstance-memory-leak[known] native memory leak
 
 2. Heap Leak - this is simulated by filling a datastructure with data on every call via an endpoint.
